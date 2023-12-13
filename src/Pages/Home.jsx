@@ -5,10 +5,12 @@ import { useState } from "react";
 export default function Home() {
   let endpoint = "https://pokeapi.co/api/v2/pokemon/";
   const [endUpdate, setEndUpdate] = useState("");
+  const [pokemon, setPokemon] = useState({});
 
   function getPokemon() {
-    Axios.get(endpoint + { endUpdate }).then((res) => {
-
+    Axios.get(endpoint + endUpdate).then((res) => {
+      setPokemon({ ...res.data });
+      console.log("dati ricevuti");
     });
   }
 
@@ -17,12 +19,16 @@ export default function Home() {
       <h1 className="text-slate-50">Capturalos todos!</h1>
       <input
         type="text"
-        onChange={(event) => setEndUpdate(event.target.value)}
+        onChange={(event) => setEndUpdate(event.target.value)} //aggiungere .toLowerCase()
       />
-      <button className="border-2 border-slate-50 bg-slate-400">
+      <button
+        onClick={getPokemon}
+        className="border-2 border-slate-50 bg-slate-400"
+      >
         Busca a tu pokémon!
       </button>
-      <PokeCard />
+
+      {pokemon.id && <PokeCard pokemon={pokemon} />}
     </div>
   );
 }
